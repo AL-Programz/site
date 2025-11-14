@@ -1,0 +1,154 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://ik.imagekit.io/ALProgramz/Screenshot%202025-09-18%20100602.png?updatedAt=1758215209361">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
+    <title>Trail</title>
+</head>
+<body>
+    <div class="cmd-bar">
+        <div class="buttons">
+        <span class="head">Button Commands <i class="fa fa-code"></i></span>
+        <button id="remove">Remove All Paint</button>
+        </div>
+        <div class="buttons extra">
+        <span class="head">Extra Commands <i class="fa fa-cogs"></i></span>
+        <label>Paint Color: <input id="color" type="color" value="#36c4c2"></label>
+        <label>Time Until Paint Removal:<input id="time" value="1" type="number"></label>
+        <label>Paint Intensity: <input id="intense" type="range" min="5" max="200" value="30"></label>
+        <label>Intensity: <span id="range">30</span>px</label>
+        <label>Paint Blur/Spread: <input id="spread" type="range" min="1" max="100" value="100"></label>
+        <label>Blur/Glow: <span id="blur">100</span>px</label>
+        <label>Draw Mode: <input type="checkbox" id="draw"></label>
+        <p>Draw Mode allows paint to only apply when holding left click. Paint does not get passively removed.</p>
+        </div>
+    </div>
+    <div id="body">
+
+    </div>
+    <style>
+        body {
+            background-color: rgb(61, 60, 60);
+            color: white;
+            font-family: sans-serif;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        .trail {
+            border-radius: 50%;
+            position: absolute;
+            box-shadow: 0 0 300px 30px;
+            transition: box-shadow 0.5s linear;
+        }
+        .cmd-bar {
+            width: fit-content;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-sizing: border-box;
+            padding: 10px;
+            background-color: rgb(48, 47, 47);
+            border-bottom-right-radius: 20px;
+            border-bottom-left-radius: 20px;
+            position: absolute;
+            left: 6.5%;
+            z-index: 1;
+            flex-wrap: wrap;
+        }
+        input[type="color"]{
+            width: 100px;
+            height: 30px;
+            cursor: pointer;
+        } 
+        #body {
+            width: 100%;
+            height: 100%;
+        }
+        input[type="number"] {
+            width: 100px;
+        }
+        button {
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            background-color: rgb(0, 174, 255);
+            color: white;
+            cursor: pointer;
+            width: fit-content;
+        }
+        button:hover {
+            background-color: rgb(3, 154, 224);
+        }
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            flex-wrap: wrap;
+            width: fit-content;
+            gap: 10px;
+            padding: 10px;
+        }
+        .extra {
+            align-items: end;
+        }
+        .head {
+            margin-right: auto;
+            border-bottom: 1px solid white;
+            padding-bottom: 5px;
+        }
+        .cmd-bar p {
+            width: 150px;
+            text-align: left;
+        }
+        </style>
+    <script>
+        const body = document.getElementById("body");
+        const drawCheck = document.getElementById("draw");
+        const vibrant = document.getElementById("vibrant");
+        const spread = document.getElementById("spread");
+        let leftMouseDown = false;
+
+        document.addEventListener("mousedown", (e) => {
+          if (e.button === 0) leftMouseDown = true;
+        });
+        document.addEventListener("mouseup", (e) => {
+          if (e.button === 0) leftMouseDown = false;
+        });
+        body.addEventListener("mousemove", (event) => {
+            if(leftMouseDown && drawCheck.checked) {
+            let trail = document.createElement("div");
+            trail.classList.add("trail");
+            trail.style.boxShadow = `0 0 ${spread.value}px ${document.getElementById("intense").value}px ${document.getElementById("color").value}`;
+            trail.style.top = `${event.clientY}px`;
+            trail.style.left = `${event.clientX}px`;
+            body.appendChild(trail);
+        } else if(!drawCheck.checked) {
+            let trail = document.createElement("div");
+            trail.classList.add("trail");
+            trail.style.boxShadow = `0 0 ${spread.value}px ${document.getElementById("intense").value}px ${document.getElementById("color").value}`;
+            trail.style.top = `${event.clientY}px`;
+            trail.style.left = `${event.clientX}px`;
+            body.appendChild(trail);
+            setTimeout(() => {
+                trail.remove();
+            }, Number(document.getElementById("time").value)*1000);
+        }
+        });
+        document.getElementById("remove").addEventListener("click", () => {
+            Array.from(document.getElementsByClassName("trail")).forEach(elem => {
+                elem.remove();
+            });
+        });
+        document.getElementById("intense").addEventListener("input", () => {
+            document.getElementById("range").textContent = document.getElementById("intense").value;
+        });
+        spread.addEventListener("input", () => {
+            document.getElementById("blur").textContent = spread.value;
+        });
+    </script>
+</body>
+</html>
