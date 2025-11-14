@@ -416,7 +416,7 @@ html {
 }
 #update {
     height: fit-content;
-    width: 80% !important;
+    width: 70% !important;
     box-sizing: border-box;
     padding: 10px;
     display: flex;
